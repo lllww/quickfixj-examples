@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/quickfix-examples.iml" filepath="$PROJECT_DIR$/.idea/quickfix-examples.iml" />
+      <module fileurl="file://$PROJECT_DIR$/banzai/quickfixj-examples-banzai.iml" filepath="$PROJECT_DIR$/banzai/quickfixj-examples-banzai.iml" />
+      <module fileurl="file://$PROJECT_DIR$/executor/quickfixj-examples-executor.iml" filepath="$PROJECT_DIR$/executor/quickfixj-examples-executor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ordermatch/quickfixj-examples-ordermatch.iml" filepath="$PROJECT_DIR$/ordermatch/quickfixj-examples-ordermatch.iml" />
+    </modules>
+  </component>
+</project>
