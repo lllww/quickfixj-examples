@@ -20,6 +20,7 @@
 package quickfix.examples.banzai;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.CountDownLatch;
 
@@ -41,6 +42,7 @@ import quickfix.Session;
 import quickfix.SessionID;
 import quickfix.SessionSettings;
 import quickfix.SocketInitiator;
+import quickfix.examples.banzai.http.ProxyServer;
 import quickfix.examples.banzai.ui.BanzaiFrame;
 
 /**
@@ -131,6 +133,13 @@ public class Banzai {
         if (!System.getProperties().containsKey("openfix")) {
             banzai.logon();
         }
+
+//        try {
+//            new ProxyServer();
+//        } catch (IOException ioe) {
+//            System.err.println("Couldn't start server:\n" + ioe);
+//        }
+
         shutdownLatch.await();
     }
 
