@@ -6,12 +6,14 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="forger" />
         <module name="quickfixj-examples-banzai" />
         <module name="quickfixj-examples-executor" />
         <module name="quickfixj-examples-ordermatch" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="forger" target="1.8" />
       <module name="quickfix-examples" target="1.5" />
       <module name="quickfixj-examples-banzai" target="1.8" />
       <module name="quickfixj-examples-executor" target="1.8" />

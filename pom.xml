@@ -14,6 +14,7 @@
 		<module>executor</module>
 		<module>ordermatch</module>
 		<module>banzai</module>
+		<module>forger</module>
 	</modules>
 
 	<prerequisites>
