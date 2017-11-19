@@ -137,7 +137,7 @@ public class Application extends quickfix.MessageCracker implements quickfix.App
             o.setSessionID(sessionID);
             o.setQuantity((int) order.getOrderQty().getValue());
             o.setSymbol(order.getSymbol().getValue());
-
+            o.setMessage(order.toString());
 
             this.orderTableModel.addOrder(o);
 
@@ -199,7 +199,7 @@ public class Application extends quickfix.MessageCracker implements quickfix.App
         return price;
     }
 
-    private void sendMessage(SessionID sessionID, Message message) {
+    public void sendMessage(SessionID sessionID, Message message) {
         try {
             Session session = Session.lookupSession(sessionID);
             if (session == null) {

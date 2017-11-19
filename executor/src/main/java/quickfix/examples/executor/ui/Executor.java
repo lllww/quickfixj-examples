@@ -1,14 +1,17 @@
 package quickfix.examples.executor.ui;
 
 import quickfix.Application;
+import quickfix.FieldNotFound;
+import quickfix.InvalidMessage;
 import quickfix.SessionID;
-import quickfix.field.BeginString;
-import quickfix.field.SenderCompID;
-import quickfix.field.TargetCompID;
+import quickfix.field.*;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Executor {
     private JTable table1;
@@ -17,9 +20,9 @@ public class Executor {
     private JButton fillButton;
 
 
-    private Application application;
+    private quickfix.examples.executor.Application application;
 
-    public Executor(OrderTableModel orderTableModel, Application application) {
+    public Executor(OrderTableModel orderTableModel,  quickfix.examples.executor.Application application) {
 //        TableModel dataModel = new
 //                AbstractTableModel() {
 //                    public int getColumnCount() {
@@ -38,6 +41,50 @@ public class Executor {
         this.application = application;
 
         table1.setModel(orderTableModel);
+        acceptButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+                Order o = orderTableModel.getOrder(table1.getSelectedRow());
+
+
+                quickfix.Message message = null;
+                try {
+                    message = new quickfix.Message(o.getMessage());
+                } catch (InvalidMessage invalidMessage) {
+                    invalidMessage.printStackTrace();
+                }
+
+
+                OrderQty orderQty = new OrderQty();
+                Symbol symbol = new Symbol();
+                Side side = new Side();
+                ClOrdID clOrdID = new ClOrdID();
+                SessionID sessionID = o.getSessionID();
+
+
+                try {
+                    message.getField(orderQty);
+                    message.getField(symbol);
+                    message.getField(side);
+                    message.getField(clOrdID);
+                } catch (FieldNotFound fieldNotFound) {
+                    fieldNotFound.printStackTrace();
+                }
+
+                Price price = new Price(1000);
+
+
+                quickfix.fix40.ExecutionReport fill = new quickfix.fix40.ExecutionReport(new OrderID("9999"), new ExecID("9999"),
+                        new ExecTransType(ExecTransType.NEW), new OrdStatus(OrdStatus.FILLED), symbol, side, orderQty, new LastShares(orderQty.getValue()), new LastPx(price.getValue()),
+                        new CumQty(orderQty.getValue()), new AvgPx(price.getValue()));
+
+                fill.set(clOrdID);
+
+                application.sendMessage(sessionID, fill);
+            }
+        });
     }
 
     public static void main(String[] args) {
@@ -57,7 +104,7 @@ public class Executor {
 //        frame.setVisible(true);
     }
 
-    public static void initialize(OrderTableModel orderTableModel, Application application) {
+    public static void initialize(OrderTableModel orderTableModel, quickfix.examples.executor.Application application) {
 
         JFrame frame = new JFrame("Executor");
         frame.setContentPane(new Executor(orderTableModel, application).panel1);
