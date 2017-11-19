@@ -38,23 +38,10 @@ import quickfix.SessionID;
 import quickfix.SessionNotFound;
 import quickfix.SessionSettings;
 import quickfix.UnsupportedMessageType;
-import quickfix.field.ApplVerID;
-import quickfix.field.AvgPx;
-import quickfix.field.CumQty;
-import quickfix.field.ExecID;
-import quickfix.field.ExecTransType;
-import quickfix.field.ExecType;
-import quickfix.field.LastPx;
-import quickfix.field.LastQty;
-import quickfix.field.LastShares;
-import quickfix.field.LeavesQty;
-import quickfix.field.OrdStatus;
-import quickfix.field.OrdType;
-import quickfix.field.OrderID;
-import quickfix.field.OrderQty;
-import quickfix.field.Price;
-import quickfix.field.Side;
-import quickfix.field.Symbol;
+import quickfix.examples.executor.ui.Order;
+import quickfix.examples.executor.ui.OrderSide;
+import quickfix.examples.executor.ui.OrderTableModel;
+import quickfix.field.*;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -71,11 +58,19 @@ public class Application extends quickfix.MessageCracker implements quickfix.App
     private final HashSet<String> validOrderTypes = new HashSet<>();
     private MarketDataProvider marketDataProvider;
 
-    public Application(SessionSettings settings) throws ConfigError, FieldConvertError {
+
+    private OrderTableModel orderTableModel;
+
+    public Application(SessionSettings settings, OrderTableModel orderTableModel) throws ConfigError, FieldConvertError {
         initializeValidOrderTypes(settings);
         initializeMarketDataProvider(settings);
 
         alwaysFillLimitOrders = settings.isSetting(ALWAYS_FILL_LIMIT_KEY) && settings.getBool(ALWAYS_FILL_LIMIT_KEY);
+
+        this.orderTableModel = orderTableModel;
+
+
+
     }
 
     private void initializeMarketDataProvider(SessionSettings settings) throws ConfigError, FieldConvertError {
@@ -136,6 +131,15 @@ public class Application extends quickfix.MessageCracker implements quickfix.App
             UnsupportedMessageType, IncorrectTagValue {
         try {
             validateOrder(order);
+
+
+            Order o = new Order();
+            o.setSessionID(sessionID);
+            o.setQuantity((int) order.getOrderQty().getValue());
+            o.setSymbol(order.getSymbol().getValue());
+
+
+            this.orderTableModel.addOrder(o);
 
             OrderQty orderQty = order.getOrderQty();
 

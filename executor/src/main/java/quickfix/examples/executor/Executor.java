@@ -34,6 +34,7 @@ import quickfix.ScreenLogFactory;
 import quickfix.SessionID;
 import quickfix.SessionSettings;
 import quickfix.SocketAcceptor;
+import quickfix.examples.executor.ui.OrderTableModel;
 import quickfix.mina.acceptor.DynamicAcceptorSessionProvider;
 import quickfix.mina.acceptor.DynamicAcceptorSessionProvider.TemplateMapping;
 
@@ -62,7 +63,10 @@ public class Executor {
     private final ObjectName connectorObjectName;
 
     public Executor(SessionSettings settings) throws ConfigError, FieldConvertError, JMException {
-        Application application = new Application(settings);
+
+        OrderTableModel orderTableModel = new OrderTableModel();
+
+        Application application = new Application(settings, orderTableModel);
         MessageStoreFactory messageStoreFactory = new FileStoreFactory(settings);
         LogFactory logFactory = new ScreenLogFactory(true, true, true);
         MessageFactory messageFactory = new DefaultMessageFactory();
@@ -76,6 +80,15 @@ public class Executor {
         jmxExporter = new JmxExporter();
         connectorObjectName = jmxExporter.register(acceptor);
         log.info("Acceptor registered with JMX, name=" + connectorObjectName);
+
+
+
+        //        Order order = new Order();
+//        order.setSessionID(new SessionID(new BeginString("Hello"), new SenderCompID("Sender"),new TargetCompID("Target")));
+//
+//        orderTableModel.addOrder(order);
+
+        quickfix.examples.executor.ui.Executor.initialize(orderTableModel, application);
     }
 
     private void configureDynamicSessions(SessionSettings settings, Application application,
